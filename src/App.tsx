@@ -1,10 +1,23 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState<object[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const result = await fetch('https://vite-test-api-fqbpcagyazhcbkd7.ukwest-01.azurewebsites.net/api/weatherforecast');
+
+      if (result.ok) {
+        const json = await result.json();
+        setData(json);
+      }
+    }
+    
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -18,9 +31,9 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <pre>
+          {JSON.stringify(data, null, 2)}
+        </pre>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
